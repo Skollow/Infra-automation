@@ -1,0 +1,28 @@
+{
+  "instances": [
+    {
+      "name": "t2.micro",
+      "cpu": 1,
+      "ram_gb": 1,
+      "supported_os": ["linux"]
+    },
+    {
+      "name": "t2.small",
+      "cpu": 1,
+      "ram_gb": 2,
+      "supported_os": ["linux", "windows"]
+    },
+    {
+      "name": "t3.medium",
+      "cpu": 2,
+      "ram_gb": 4,
+      "supported_os": ["linux", "windows"]
+    },
+    {
+      "name": "m5.large",
+      "cpu": 2,
+      "ram_gb": 8,
+      "supported_os": ["linux", "windows"]
+    }
+  ]
+}
