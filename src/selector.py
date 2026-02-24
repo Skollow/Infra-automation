@@ -1,6 +1,6 @@
-from log import logger, setup_logging
+from log import setup_logger
 
-setup_logging()
+logger = setup_logger()
 
 logger.info("Application started")
 
