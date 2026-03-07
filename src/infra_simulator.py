@@ -1,4 +1,5 @@
 import subprocess
+from pathlib import Path
 from log import setup_logger
 from machine import UserRequest
 from storage import load_catalog, load_state, save_state
@@ -8,24 +9,30 @@ from uuid import uuid4
 
 logger = setup_logger()
 
-# def run_post_provision_script():
-#     try:
-#         result = subprocess.run(
-#             ["bash", "setup_services.sh"],
-#             check=True,
-#             capture_output=True,
-#             text=True,
-#         )
+def run_post_provision_script():
+    project_root = Path(__file__).resolve().parent.parent
+    script_path = project_root / "scripts" / "setup_services.sh"
 
-#         logger.info("Provisioning script output:")
-#         logger.info(result.stdout)
+    try:
+        result = subprocess.run(
+            ["bash", str(script_path)], 
+            check=True,
+            capture_output=True,
+            text=True
+        )
 
-#         print("\n📦 Services configured successfully.")
+        logger.info("Post-provision script completed successfully")
+        logger.debug(result.stdout)
+        return True
 
-#     except subprocess.CalledProcessError as e:
-#         logger.error("Provisioning script failed")
-#         logger.error(e.stderr)
-#         print("\n❌ Service configuration failed.")
+    except subprocess.CalledProcessError as e:
+        logger.error("Script failed")
+        logger.error(e.stderr)
+        return False
+
+    except FileNotFoundError:
+        logger.error(f"Script not found at {script_path}")
+        return False
 
 def choose_requirements_flow():
     correlation_id = str(uuid4())
@@ -52,6 +59,11 @@ def choose_requirements_flow():
 
         new_instance = create_instance(match, os_type, state)
         save_state(state)
+
+        success = run_post_provision_script()
+
+        if not success:
+            print("⚠ Service setup failed. Check logs.")
 
         logger.info(
         f"[{correlation_id}] | Provisioning SUCCESS | "
@@ -114,6 +126,11 @@ def choose_machine_flow():
 
     new_instance = create_instance(selected_instance, os_type, state)
     save_state(state)
+
+    success = run_post_provision_script()
+
+    if not success:
+        print("⚠ Service setup failed. Check logs.")
 
     print(f"\n✅ Instance #{new_instance.id} created.")
     print(f"Type: {new_instance.instance_type}")

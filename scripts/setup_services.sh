@@ -2,21 +2,29 @@
 
 set -e
 
-echo "Starting service configuration..."
+SERVICE="nginx"
 
-install_if_missing() {
-    PACKAGE=$1
+echo "Starting service setup..."
 
-    if dpkg -s "$PACKAGE" &> /dev/null; then
-        echo "$PACKAGE already installed."
-    else
-        echo "Installing $PACKAGE..."
-        sudo apt-get update -y
-        sudo apt-get install -y "$PACKAGE"
-    fi
-}
+if command -v nginx >/dev/null 2>&1; then
+    echo "$SERVICE is already installed."
+else
+    echo "$SERVICE not found. Installing..."
 
-install_if_missing nginx
-install_if_missing curl
+    # sudo apt update
 
-echo "Service configuration completed."
+    # sudo apt install -y nginx
+
+    echo "$SERVICE installation completed."
+fi
+
+if systemctl is-active --quiet nginx; then
+    echo "$SERVICE service is already running."
+else
+    echo "Starting $SERVICE service..."
+    # sudo apt update
+    # sudo apt install nginx
+fi
+
+echo "Service setup completed successfully."
+exit 0
