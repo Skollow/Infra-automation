@@ -57,7 +57,7 @@ def choose_requirements_flow():
 
                 if min_cpu not in range(1, 3):
                     print("❌ Invalid selection. Please choose either 1 or 2.")
-                    logger.warning(f"[{correlation_id}] | Invalid instance selection: {choice}")
+                    logger.warning(f"[{correlation_id}] | Invalid instance selection: {min_cpu}")
                     continue
                 break
             except ValueError:
@@ -71,7 +71,7 @@ def choose_requirements_flow():
 
                 if min_ram not in allowed_ram:
                     print("❌ Invalid selection. Please choose either 1, 2, 4, 8.")
-                    logger.warning(f"[{correlation_id}] | Invalid instance selection: {choice}")
+                    logger.warning(f"[{correlation_id}] | Invalid instance selection: {min_ram}")
                     continue
                 break
             except ValueError:
