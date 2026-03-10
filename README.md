@@ -16,7 +16,7 @@ The system also demonstrates how a Python provisioning workflow can trigger a Ba
 - Stop running instances
 - Restart stopped instances
 - Display all instances and their status
-- Execute a Mock Bash script after provisioning to simulate service installation (will be changed to working script in WCL if need arises)
+- Execute a Mock Bash script after provisioning to simulate service installation (will be changed to working script in WSL if need arises)
 ---
 
 ## Requirements

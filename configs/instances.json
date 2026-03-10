@@ -287,7 +287,23 @@
       "ram_gb": 4,
       "os_type": "windows",
       "status": "running"
+    },
+    {
+      "id": 37,
+      "instance_type": "t2.micro",
+      "cpu": 1,
+      "ram_gb": 1,
+      "os_type": "linux",
+      "status": "running"
+    },
+    {
+      "id": 38,
+      "instance_type": "m5.large",
+      "cpu": 2,
+      "ram_gb": 8,
+      "os_type": "linux",
+      "status": "running"
     }
   ],
-  "last_id": 36
+  "last_id": 38
 }

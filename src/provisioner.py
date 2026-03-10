@@ -1,5 +1,6 @@
 from machine import ProvisionedInstance
 from log import setup_logger
+
 logger = setup_logger()
 
 def find_matching_instance(catalog, request):

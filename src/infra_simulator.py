@@ -37,13 +37,46 @@ def run_post_provision_script():
 def choose_requirements_flow():
     correlation_id = str(uuid4())
     logger.info(f"[{correlation_id}] | Provisioning STARTED - User chose to create an instance by defining attributes.")
+
     try: 
         catalog = load_catalog()
         state = load_state()
 
-        os_type = input("OS (linux/windows): ").lower()
-        min_cpu = int(input("Minimum CPU cores (1/2):"))
-        min_ram = int(input("Minimum RAM (1/2/4/8): "))
+        while True:
+            allowed_os = {"linux", "windows"}
+            os_type = input("OS (linux/windows): ").lower()
+            if os_type not in allowed_os:
+                print("❌ Please choose from the supported options.")
+                logger.error(f"[{correlation_id}] | Error: unsupported OS chosen: {os_type}")
+                continue 
+            break
+        
+        while True:
+            try:
+                min_cpu = int(input("Minimum CPU cores (1/2):"))
+
+                if min_cpu not in range(1, 3):
+                    print("❌ Invalid selection. Please choose either 1 or 2.")
+                    logger.warning(f"[{correlation_id}] | Invalid instance selection: {choice}")
+                    continue
+                break
+            except ValueError:
+                print("❌ Input must be valid.")
+                logger.error(f"[{correlation_id}] | Error: non-valid input (either 1 or 2).")
+        
+        while True:
+            try:
+                allowed_ram = {1, 2, 4, 8}
+                min_ram = int(input("Minimum RAM (1/2/4/8): "))
+
+                if min_ram not in allowed_ram:
+                    print("❌ Invalid selection. Please choose either 1, 2, 4, 8.")
+                    logger.warning(f"[{correlation_id}] | Invalid instance selection: {choice}")
+                    continue
+                break
+            except ValueError:
+                print("❌ Input must be valid.")
+                logger.error(f"[{correlation_id}] | Error: non-valid input (either 1, 2, 4, 8).")
 
         request = UserRequest(
             os_type=os_type,
@@ -107,22 +140,34 @@ def choose_machine_flow():
             f"| OS: {instance['supported_os']}"
         )
 
-    try:
-        choice = int(input("\nSelect instance number: "))
-        selected_instance = catalog[choice - 1]
-    except ValidationError as e:
-        logger.error(f"[{correlation_id}] | Error: invalid input: {e}. Provisioning stopped.")
-        return
-    except ValueError:
-        logger.error(f"[{correlation_id}] | Error: non-numeric input. Provisioning stopped.")
-        return
+    while True:
+        try:
+            choice = int(input("\nSelect instance number (1-4): "))
 
-    print(f"\nSupported OS: {selected_instance['supported_os']}")
-    os_type = input("Select OS: ").lower()
+            if choice not in range(1, 5):
+                print("❌ Invalid selection. Please choose a number between 1 and 4.")
+                logger.warning(f"[{correlation_id}] | Invalid instance selection: {choice}")
+                continue
 
-    if os_type not in selected_instance["supported_os"]:
-        logger.error("Error: non-supported OS chosen. Provisioning stopped.")
-        return
+            selected_instance = catalog[choice - 1]
+            break
+
+        except ValueError:
+            print("❌ Input must be a number.")
+            logger.error(f"[{correlation_id}] | Error: non-valid input (number between 1 to 4).")
+
+    
+    while True:
+        print(f"\nSupported OS: {', '.join(selected_instance['supported_os'])}")
+
+        os_type = input("Select OS: ").lower()
+
+        if os_type not in selected_instance["supported_os"]:
+            print("❌ Unsupported OS. Please choose from the supported options.")
+            logger.error(f"[{correlation_id}] | Error: unsupported OS chosen: {os_type}")
+            continue
+
+        break
 
     new_instance = create_instance(selected_instance, os_type, state)
     save_state(state)
