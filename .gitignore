@@ -1,4 +1,3 @@
 logs/
 *.logs
 src/__pycache__/
-configs/instances.json
