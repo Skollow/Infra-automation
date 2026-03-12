@@ -1,6 +1,6 @@
 # infra automation project 1
 
-This project simulates a simple infrastructure automation tool that allows users to create, stop, start, and manage virtual instances.
+This project simulates a simple infrastructure automation tool that allows users to create, stop, start, and manage ec2 instances.
 
 The system also demonstrates how a Python provisioning workflow can trigger a Bash script to configure services automatically.
 
